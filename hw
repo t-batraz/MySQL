@@ -1,0 +1,43 @@
+/*1.1*/
+UPDATE users
+   SET created_at  = CURRENT_TIMESTAMP WHERE created_at IS NULL;
+UPDATE users
+   SET updated_at  = CURRENT_TIMESTAMP WHERE updated_at IS NULL;
+/*1.2*/
+/*1.3*/
+SELECT t.*
+  FROM storehouses_products t
+ORDER BY CASE
+		   WHEN t.value = 0 THEN 1
+		   ELSE 0
+		 end,
+		 t.value;
+/*1.4*/
+SELECT t.*
+  FROM users t
+ WHERE t.month IN ('may', 'august');
+/*1.5*/
+SELECT t.*
+  FROM catalogs t
+ WHERE t.id IN (5, 1, 2)
+ORDER BY CASE
+		   WHEN t.id = 5 THEN 0
+		   WHEN t.id = 1 THEN 1
+		   WHEN t.id = 2 THEN 2
+		 END;
+/*2.1*/
+SELECT AVG((CURDATE() - t.birthday)/365.25)
+  FROM users t;
+/*2.2*/
+SELECT SUM(CASE WHEN tab1.d = 1 THEN 1 ELSE 0 END) Sunday,
+	   SUM(CASE WHEN tab1.d = 2 THEN 1 ELSE 0 END) Monday,
+	   SUM(CASE WHEN tab1.d = 3 THEN 1 ELSE 0 END) Tuesday,
+	   SUM(CASE WHEN tab1.d = 4 THEN 1 ELSE 0 END) Wednesday,
+	   SUM(CASE WHEN tab1.d = 5 THEN 1 ELSE 0 END) Thursday,
+	   SUM(CASE WHEN tab1.d = 6 THEN 1 ELSE 0 END) Friday,
+	   SUM(CASE WHEN tab1.d = 7 THEN 1 ELSE 0 END) Saturday
+ FROM (SELECT DAYOFWEEK(ADDDATE(t.birthday,
+						   		INTERVAL (EXTRACT(YEAR FROM CURDATE()) - EXTRACT(YEAR FROM t.birthday))
+				   		   		YEAR)) d
+		 FROM users t) tab1;
+/*2.3*/
