@@ -1,0 +1,18 @@
+/*1*/
+SELECT u.*
+  FROM users u
+ WHERE EXISTS (SELECT 1 FROM orders o WHERE o.user_id = users.id);
+/*2*/
+SELECT c.name,
+	   p.name,
+	   p.desription,
+	   p.price
+  FROM products p
+       JOIN catalogs c ON p.catalog_id = c.id;
+/*3*/
+SELECT f.id    id,
+	   fr.name from,
+	   to.name to
+  FROM flights f
+       JOIN cities fr on f.from = fr.lable
+       JOIN cities to on f.to = to.lable
