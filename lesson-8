@@ -1,0 +1,28 @@
+SELECT p.id user_id, 
+       count(l.id) count_of_likes
+  FROM (SELECT p.user_id id
+          FROM profiles p
+        ORDER BY p.birthday DESC
+         LIMIT 10) p
+       LEFT JOIN likes l on l.target_id = p.id
+       				        and l.target_type_id = (SELECT t.id FROM target_types t WHERE t.name = 'users')
+GROUP BY p.id;
+
+SELECT l.gender
+  FROM (SELECT p.gender, 
+               count(l.id) count_of_likes
+          FROM likes l
+               JOIN profiles p on p.user_id = l.user_id
+        GROUP BY p.gender) l
+ORDER BY l.count_of_likes DESC
+ LIMIT 1;
+
+SELECT u.id id, 
+	     count(m.id) + count(l.id) * 5 + count(p.user_id) * 10
+  FROM users u
+  	   LEFT JOIN messages m on u.id = m.from_user_id
+  	   LEFT JOIN likes l on u.id = l.user_id
+  	   LEFT JOIN posts p on u.id = p.user_id
+GROUP BY u.id
+ORDER BY (count(l.id) + count(l.id) * 5 + count(p.user_id) * 10)
+ LIMIT 10;
