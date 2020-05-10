@@ -5,7 +5,7 @@ SELECT p.id user_id,
         ORDER BY p.birthday DESC
          LIMIT 10) p
        LEFT JOIN likes l on l.target_id = p.id
-       		            and l.target_type_id = (SELECT t.id FROM target_types t WHERE t.name = 'users')
+                            and l.target_type_id = (SELECT t.id FROM target_types t WHERE t.name = 'users')
 GROUP BY p.id;
 
 SELECT l.gender
