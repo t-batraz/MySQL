@@ -1,0 +1,19 @@
+/*1*/
+CREATE INDEX users_email_idx ON users(email);
+CREATE INDEX profiles_country_city_idx ON profiles (country, city);
+CREATE INDEX messages_from_user_id_to_user_id_idx ON messages (from_user_id, to_user_id);
+CREATE INDEX communities_name_idx ON communities(name);
+CREATE INDEX posts_user_id_idx ON posts(user_id);
+CREATE INDEX posts_community_id_idx ON posts(community_id);
+CREATE INDEX posts_updated_at_idx ON posts(updated_at);
+/*2 не смог придумать как посчитать среднее количество пользователей в группах с помощью оконных функций*/
+SELECT DISTINCT c.name                                             group_name,
+	   1                                                           average_users_in_group,
+	   MAX(p.birthday) OVER (PARTITION BY c.name)                  youngest_user,
+	   MIN(p.birthday) OVER (PARTITION BY c.name)                  oldest_user,
+	   COUNT(1) OVER (PARTITION BY c.name)                         count_of_users,
+	   COUNT(1) OVER()                                             total_users,
+	   COUNT(1) OVER (PARTITION BY c.name) * 100 / COUNT(1) OVER() percent_in_group
+  FROM communities c
+       JOIN communities_users cu ON cu.community_id = c.id
+       JOIN profiles p ON p.user_id = cu.user_id;
